@@ -1,11 +1,10 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Tue Feb 18 09:50:14 2020
 
 @author: ibrahimkaya
 
 The Rulebased Algorithm has been taken from the great paper 
+"Outdoor flocking and formation flight with autonomous aerial robots" by Vicsek et.al.
 """
 import numpy as np
 import math
