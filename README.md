@@ -34,14 +34,23 @@ Although the number of total particles (population) has been given as 51, it can
 # Import neccessary modules
 
 import time
+
 import math
+
 import matplotlib.pyplot as plt
+
 import pygame
+
 import random
+
 import numpy as np
+
 from pygame.locals import *
+
 from PygameModule import *
+
 from Swarm_Algorithm_RuleBased import *
+
 
 # Refences¶
 
