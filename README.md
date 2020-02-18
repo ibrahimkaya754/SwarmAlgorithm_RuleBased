@@ -52,7 +52,7 @@ from PygameModule import *
 from Swarm_Algorithm_RuleBased import *
 
 
-# Refences¶
+# Refences
 
 [1] "Outdoor flocking and formation flight with autonomous aerial robots", G. Vásárhelyi, Cs. Virágh, G. Somorjai, N. Tarcai, T. Szörényi, T. Nepusz, T. Vicsek
 
