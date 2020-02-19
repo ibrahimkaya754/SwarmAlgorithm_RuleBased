@@ -2,10 +2,11 @@ Swarm algorithm by using the great paper "Outdoor flocking and formation flight 
 
 To run the code, pygame should be installed to the environment simply by using pip (pip install pygame).
 
+The medium post related with this subject is: https://medium.com/@ikaya754/rule-based-swarm-algorithm-397dbf6361ba
 
 # Swarm Algorithm for Objects Moving in 2D Domain:
 
-The swarm concept in recents years has gain quite popularity in many applications, especially in defence industry. The most attracting side of swarm concept is to be able to fulfill complex duties with relatively cheap ammo.
+The swarm concept in recents years gained quite popularity in many applications, especially in defence industry. The most attracting side of swarm concept is to be able to fulfill complex duties with relatively cheap ammo.
 
 The code below shows swarming particles (like drones) in 2 Dimensional domain and has been generated with rule based algorithm given in the great paper "Outdoor flocking and formation flight with autonomous aerial robots" by Vicsek et. al. [1] The document referenced in [2] is also a very explanatory and beneficial to understand the basics of swarm concept.
 
