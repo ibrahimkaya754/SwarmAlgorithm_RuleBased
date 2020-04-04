@@ -31,10 +31,8 @@ class particle(pygame.sprite.Sprite): # CUSTOMIZABLE OBJECT
         pygame.draw.circle(self.image, (color1, color2, color3), (2, 2), 2) 
         self.rect = self.image.get_rect()       
         
-        self.positionx      = random.random() * (200)
-        self.positiony      = random.random() * (650)
-#        self.positionx      = random.randint(0,1500)
-#        self.positiony      = random.randint(0,750)
+        self.positionx      = 500+np.random.random()*10
+        self.positiony      = 5+np.random.random()*10
         self.rect.center    = (self.positionx, self.positiony)
         self.vel_min        = -20
         self.vel_max        = 20
@@ -44,10 +42,9 @@ class particle(pygame.sprite.Sprite): # CUSTOMIZABLE OBJECT
         self.vely           = np.random.rand()
         self.dx             = random.random() * 20
         self.dy             = random.random() * 20
-    
-    
+     
     def update(self): 
-        oldCenter = self.rect.center
+#        oldCenter = self.rect.center
 #        self.rect.centerx += self.dx #x_hareketi
 #        self.rect.centery += self.dy #y_hareketi
         self.positionx      = self.positionx + self.dx
@@ -68,7 +65,6 @@ class particle(pygame.sprite.Sprite): # CUSTOMIZABLE OBJECT
         if self.rect.top  <= 0:
             self.dy *= -1
             
-        
 ###################### FIND DISTANCES ###################################################################################################
 class distance():
     def __init__(self,population_number,dimension,distances,
