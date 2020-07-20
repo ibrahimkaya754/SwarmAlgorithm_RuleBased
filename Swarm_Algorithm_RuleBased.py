@@ -14,8 +14,8 @@ class swarm_algorithm():
         self.params                     = params
         
     def algo(self,particle,axes,position,velocity,closest_particles_abs,
-             xtrg,wght,distance_to_target,vflock= 20,delta_t= 0.10,
-             vel_min= -20.0,vel_max= 20.0):
+             xtrg,wght,distance_to_target,vflock= 20,delta_t= 0.01,
+             vel_min= 10,vel_max= 20.0,TimeConstant=0.01):
         
         r0,r1,r2,D,Cfrict,Cshill,R,d    = [self.params[ii] for ii in range(8)]
         apot, aslp, v1, a1, a6          = [0 for ii in range(5)]
@@ -28,7 +28,8 @@ class swarm_algorithm():
         self.xtrg                       = xtrg
         self.wght                       = wght
         self.distance_to_target         = distance_to_target
-        self.closestneighbour_number = 3
+        self.closestneighbour_number    = 3
+
         for nb in range(1,self.closestneighbour_number):
             if np.abs(self.position[self.closest_particles_abs[self.particle,nb],self.axes] - self.position[self.particle,self.axes]) < r0:
                 apot = apot + D * np.minimum(r1,r0 - np.abs(self.position[self.closest_particles_abs[self.particle,nb],self.axes] - \
@@ -56,21 +57,43 @@ class swarm_algorithm():
                 self.position[self.particle,self.axes]) / np.abs(self.xtrg[self.axes] - \
                 self.position[self.particle,self.axes])) - self.velocity[self.particle,self.axes])
         vtrack = 0
-        vel    = self.velocity[self.particle,self.axes]
         
-        delta_vel = ((self.wght[5]) * (v1+vspp+vtrack-self.velocity[self.particle,self.axes]) + \
-                    (self.wght[0] * apot + self.wght[1] * aslp + self.wght[2] * awall + self.wght[3] * a1 + self.wght[4] * a6)) * delta_t
+        self.delta_vel = ((self.wght[5]) * (v1+vspp+vtrack-self.velocity[self.particle,self.axes]) + \
+                    (self.wght[0] * apot + self.wght[1] * aslp + self.wght[2] * awall + self.wght[3] * a1 + self.wght[4] * a6))
+        
+        # self.velocity[self.particle,self.axes] = self.velocity[self.particle,self.axes] + self.delta_vel * delta_t
+        # self.velocity[self.particle,self.axes] = self.distance_to_target/100 * self.velocity[self.particle,self.axes]
 
-        self.velocity[self.particle,self.axes] = self.velocity[self.particle,self.axes] + delta_vel
-        self.velocity[self.particle,self.axes] = self.distance_to_target/100 * self.velocity[self.particle,self.axes]
-        
-        if math.isinf(self.velocity[self.particle,self.axes]):
-            self.velocity[self.particle,self.axes] = vel
-        if self.velocity[self.particle,self.axes]>vel_max:
-            self.velocity[self.particle,self.axes] = vel_max
-        elif self.velocity[self.particle,self.axes]<vel_min:
-            self.velocity[self.particle,self.axes] = vel_min
-        
+        if self.axes == 0:
+            if self.delta_vel > 10:
+                self.delta_vel = 10
+            elif self.delta_vel < -10:
+                self.delta_vel = -10
+
+            #We can omit the time delays in acceleration in x-direction (where thrust is applied)
+            #self.delta_vel = self.delta_vel * (1-math.exp(-delta_t/TimeConstant)) #dynamic with 1st order system response
+            self.velocity[self.particle,self.axes] = self.velocity[self.particle,self.axes] + self.delta_vel * delta_t
+            
+            if self.velocity[self.particle,self.axes]>vel_max:
+                self.velocity[self.particle,self.axes] = vel_max
+            elif self.velocity[self.particle,self.axes]<vel_min:
+                self.velocity[self.particle,self.axes] = vel_min
+        else:
+            if self.delta_vel > 3:
+                self.delta_vel = 3
+            elif self.delta_vel < -3:
+                self.delta_vel = -3 
+
+            self.delta_vel = self.delta_vel * (1-math.exp(-delta_t/TimeConstant)) #dynamic with 1st order system response
+            self.velocity[self.particle,self.axes] = self.velocity[self.particle,self.axes] + self.delta_vel * delta_t
+
+            if self.velocity[self.particle,self.axes]>vel_max:
+                self.velocity[self.particle,self.axes] = vel_max
+            elif self.velocity[self.particle,self.axes]<-vel_max:
+                self.velocity[self.particle,self.axes] = -vel_max
+       
+        if self.distance_to_target <= 100:
+            self.velocity[self.particle,self.axes] = self.distance_to_target/200 * self.velocity[self.particle,self.axes]
         self.position_delta = self.velocity[self.particle,self.axes] * delta_t
     
     ######################### SMOOTH TRANSFER FUNCTION ########################################################################################

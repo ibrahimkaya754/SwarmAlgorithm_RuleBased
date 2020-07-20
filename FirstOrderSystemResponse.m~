@@ -1,0 +1,19 @@
+
+row = 100;
+col = 100;
+inp = ones(row,col);
+out = zeros(row,col);
+
+for ii=1:row
+    for jj=1:col
+        inp(ii,jj) = ii;
+    end
+end
+
+for ii=1:row
+    for jj=1:col
+        out(ii,jj)=(1-exp(-0.01*jj/0.01))*inp(ii);
+    end
+end
+
+plot([0:0.01:col*0.01],inp(1,:),0.01.*ones(row,col),out(1,:));

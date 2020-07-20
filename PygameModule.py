@@ -3,11 +3,12 @@
 """
 Created on Mon Nov 13 13:25:16 2017
 
-@author: roketsan
+@author: ikaya
 """
 import numpy as np
 import pygame
 import random
+import math
 
 class particle(pygame.sprite.Sprite): # CUSTOMIZABLE OBJECT
     def __init__(self, screen, background, color):
@@ -31,39 +32,23 @@ class particle(pygame.sprite.Sprite): # CUSTOMIZABLE OBJECT
         pygame.draw.circle(self.image, (color1, color2, color3), (2, 2), 2) 
         self.rect = self.image.get_rect()       
         
-        self.positionx      = 500+np.random.random()*10
-        self.positiony      = 5+np.random.random()*10
+        self.positionx      = np.random.random()*250+np.random.random()*10
+        self.positiony      = np.random.random()*1000+np.random.random()*150
         self.rect.center    = (self.positionx, self.positiony)
-        self.vel_min        = -20
+        self.vel_min        = 5
         self.vel_max        = 20
         self.lower_boundary = np.array([-1500,-1500])
         self.upper_boundary = np.array([1500,1500])
-        self.velx           = np.random.rand()
-        self.vely           = np.random.rand()
+        self.velx           = np.random.rand()*self.vel_min
+        self.vely           = np.random.rand()*self.vel_min
         self.dx             = random.random() * 20
         self.dy             = random.random() * 20
-     
+        self.teta           = math.atan2(self.vely,self.velx)*180/math.pi
+
     def update(self): 
-#        oldCenter = self.rect.center
-#        self.rect.centerx += self.dx #x_hareketi
-#        self.rect.centery += self.dy #y_hareketi
         self.positionx      = self.positionx + self.dx
         self.positiony      = self.positiony + self.dy
         self.rect.center    = (self.positionx, self.positiony)
-#        pygame.draw.line(self.background, (0, 0, 0), oldCenter, self.rect.center) # iz        
-        self.checkBounds()        
-    
-    def checkBounds(self):
-        """ bounce on encountering any screen boundary """
-        
-        if self.rect.right >= self.screen.get_width():
-            self.dx *= -1
-        if self.rect.left <= 0:
-            self.dx *= -1
-        if self.rect.bottom >= self.screen.get_height():
-            self.dy *= -1
-        if self.rect.top  <= 0:
-            self.dy *= -1
             
 ###################### FIND DISTANCES ###################################################################################################
 class distance():
