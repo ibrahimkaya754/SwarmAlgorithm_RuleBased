@@ -63,12 +63,12 @@ def function2opt(params):
     
         for ii in range(particles.nop):
             mean_closest[ii]  = np.abs(150.0-particles.member[str(ii)]['abs_distance_sorted'][1])
-            mean_furthest[ii] = np.abs(1000.0-particles.member[str(ii)]['abs_distance_sorted'][-1])
+            mean_furthest[ii] = np.abs(750.0-particles.member[str(ii)]['abs_distance_sorted'][-1])
             mean2target[ii]   = particles.member[str(ii)]['distance2target']
             
-        val2min.append(np.mean(mean_closest) + np.mean(mean_furthest)+ np.mean(mean2target))
+        val2min.append(4*np.sum(mean_closest) + np.sum(mean_furthest)+ np.sum(mean2target))
         
-    return np.mean(val2min)
+    return np.sum(val2min)
 ################################################################################################
 #%%
 xtrg         = [np.random.randint(screen_size)[ii] for ii in range(number_of_axes)]
@@ -76,7 +76,7 @@ optimization = opt(func=function2opt,lowerbounds=-100*np.ones(14),upperbounds=10
 particles.__init__(number_of_particles=number_of_particles, screensize=screen_size, target_location=xtrg, display=True, CommRng=100, summary=False)
 ################################################################################################
 #%%
-optimization.update(iteration=50)
+optimization.update(iteration=2)
 #%%  Save the best values
 best_vals_list = []
 for elem in list(optimization.best_position.keys()): 
@@ -112,14 +112,39 @@ print('best_value_ever    : ',optimization.member[list(optimization.best_positio
 print('best_value_obtained at iteration no: %s' % (optimization.best_value_iteration))
 ################################################################################################
 # %%
-best_vals_ever = list(optimization.member[list(optimization.best_position.keys())[0]]['best_position'].values())
-function2opt(params=best_vals_ever)
+list_mean_closest  = []
+list_mean_furthest = []
+list_mean2target   = []
+list_mean2opt      = []
+for ii in range(optimization.nop):
+    print('particle no: %s' % (ii))
+    closest_distance   = []
+    furthest_distance  = []
+    distance2target    = []
+    best_vals_ever = list(optimization.member[list(optimization.best_position_ever.keys())[ii]]['best_position'].values())
+    for _ in range(3):
+        function2opt(params=best_vals_ever)
+        for key in particles.member.keys():
+            closest_distance.append(np.abs(particles.member[key]['abs_distance_sorted'][1]))
+            furthest_distance.append(np.abs(particles.member[key]['abs_distance_sorted'][-1]))
+            distance2target.append(particles.member[key]['distance2target'])
+    list_mean_closest.append(np.mean(closest_distance))
+    list_mean_furthest.append(np.mean(furthest_distance))
+    list_mean2target.append(np.mean(distance2target))
+    list_mean2opt.append(np.mean(closest_distance) + np.mean(furthest_distance) + np.mean(distance2target))
 ################################################################################################
 # %%
-mean_closest     = np.zeros(number_of_particles)
-mean_furthest    = np.zeros(number_of_particles)
-for ii in range(particles.nop):
-    mean_closest[ii]  = particles.member[str(ii)]['abs_distance_sorted'][1]
-    mean_furthest[ii] = particles.member[str(ii)]['abs_distance_sorted'][-1]
-    
+for _ in range(5):
+    best_vals_ever = list(optimization.member[list(optimization.best_position_ever.keys())[0]]['best_position'].values())
+    function2opt(params=best_vals_ever)
+    closest_distance     = np.zeros(number_of_particles)
+    furthest_distance    = np.zeros(number_of_particles)
+    distance2target      = np.zeros(number_of_particles)
+    for ii in range(particles.nop):
+        closest_distance[ii]  = np.abs(particles.member[str(ii)]['abs_distance_sorted'][1])
+        furthest_distance[ii] = np.abs(particles.member[str(ii)]['abs_distance_sorted'][-1])
+        distance2target[ii]   = particles.member[str(ii)]['distance2target']
 ################################################################################################
+# %%
+bestfornow = list(optimization.member[list(optimization.best_position_ever.keys())[35]]['best_position'].values())
+np.savetxt('best_coefficients01.txt',bestfornow)
