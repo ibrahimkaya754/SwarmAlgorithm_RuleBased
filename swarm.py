@@ -8,13 +8,13 @@ from matplotlib import pyplot as plt
 class swarm():
     def __init__(self, screensize, target_location, number_of_particles=20, display=False, dim=2, 
                        CommRng= 200, delta_t= 0.1, TimeConstant=0.01, summary=True, import_coefficients=False,
-                       params=np.zeros(14)):
+                       params=np.zeros(14),maximumvelocity= 20):
         self.screensize   = screensize
         self.nop          = number_of_particles
         self.display      = display
         self.summary      = summary
-        self._vel_max     = 20.0
-        self._vflock      = 20.0
+        self._vel_max     = maximumvelocity
+        self._vflock      = maximumvelocity
         self.member       = {}
         self.iteration_no = 0
         self.dim          = 2        # 2 dimensional motion
@@ -213,8 +213,6 @@ class swarm():
             pygame.display.flip()     
             self.screen.fill(self.WHITE)
     
-
-
     ######################### SMOOTH TRANSFER FUNCTION ########################################################################################
     def smooth_transfer_function(self,x,R,d):
         if x<=R:

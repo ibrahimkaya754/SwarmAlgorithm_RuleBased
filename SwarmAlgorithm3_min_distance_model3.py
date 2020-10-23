@@ -26,11 +26,9 @@ list_ave_distance   = []
 xtrg                = [initial_location[ii] + np.random.randint([900,1400])[ii] for ii in range(number_of_axes)]
 particles           = swarm(number_of_particles=number_of_particles, screensize=screen_size, target_location=xtrg,
                           display=True, CommRng=100, dim=number_of_axes, delta_t= delta_t)
-leader              = particles.leader
 numberofneighbour   = 2
 numberofleader      = 1
 clock               = pygame.time.Clock()
-numberofepochs      = 1
 
 ### The multiplayer 2 below is for 'position' and 'velocity' ###
 print('----------------------------------------------------------------------------')
